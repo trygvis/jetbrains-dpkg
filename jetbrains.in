@@ -61,11 +61,4 @@ then
   fi
 fi
 
-case `basename $0` in
-  idea)
-    exec /usr/share/jetbrains/$product/bin/idea.sh "$@"
-    ;;
-  clion)
-    exec /usr/share/jetbrains/clion/bin/clion.sh "$@"
-    ;;
-esac
+exec REAL_BIN

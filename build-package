@@ -40,7 +40,7 @@ find_latest() {
   echo "Finding latest version from $PRODUCT_URL ..."
   read url version skip_the_rest < <(wget --max-redirect 5 -O - -q $PRODUCT_URL | \
       sed -n -e 's,\(href=.[^ "]\),\n\1,gp' | \
-      sed -n -e 's,^href.*\(http[^ "]*\).*>ideaIU-\([^<]*\)\.tar\.gz.*,\1 \2,p' | \
+      sed -n -e "s,^href.*\(http[^ \"]*\).*>$path_expr-\([^<]*\)\.tar\.gz.*,\1 \2,p" | \
       sed -e '/sha256/d' | \
       xargs)
 
@@ -83,7 +83,9 @@ build_common() {
   fi
   mkdir -p root/usr/bin
 
-  cat jetbrains.in | sed "s,\$product,$product," > root/usr/bin/$bin_name
+  cat jetbrains.in | \
+    sed -e "s,REAL_BIN,$real_bin," \
+    > root/usr/bin/$bin_name
   chmod +rx root/usr/bin/$bin_name
 
   desktop=root/usr/share/applications/$product.desktop
@@ -94,22 +96,24 @@ Exec=/usr/bin/$bin_name
 Terminal=false
 Type=Application
 StartupNotify=true
+Comment=$tagline
 Categories=development;ide;debugger;profiling" > $desktop
   case $product in
     idea-iu)
       echo "Name=IntelliJ IDEA - Ultimate Edition
-Comment=The Most Intelligent Java IDE
 Icon=/usr/share/jetbrains/$product/bin/idea.png" >> $desktop
       ;;
     idea-ic)
       echo "Name=IntelliJ IDEA - Community Edition
-Comment=The Most Intelligent Java IDE
 Icon=/usr/share/jetbrains/$product/bin/idea_CE128.png" >> $desktop
       ;;
     clion)
       echo "Name=CLion
-Comment=A cross-platform IDE for C and C++
 Icon=/usr/share/jetbrains/clion/bin/clion.svg" >> $desktop
+      ;;
+    webstorm)
+      echo "Name=WebStorm
+Icon=/usr/share/jetbrains/webstorm/bin/webstorm.svg" >> $desktop
       ;;
   esac
 
@@ -151,7 +155,7 @@ build_debian() {
 
   mkdir -p root/DEBIAN
 
-  debian/generate-control "$product" "$version" > root/DEBIAN/control
+  debian/generate-control "$product" "$version" "$tagline" > root/DEBIAN/control
 
   cp debian/postinst root/DEBIAN/postinst
   chmod +rx root/DEBIAN/postinst
@@ -221,7 +225,7 @@ do
       product=$OPTARG
 
       case "$product" in
-        idea-ic|idea-iu|clion)
+        idea-ic|idea-iu|clion|webstorm)
           ;;
         *)
           usage "Unknown product"
@@ -255,20 +259,35 @@ then
 fi
 
 bin_name=$product
+real_bin="/usr/share/jetbrains/$product/bin/$product.sh"
 case $product in
   idea-iu)
-    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.2+EAP"
+    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
+    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
     bin_name=idea
     path_expr=ideaIU
+    real_bin="/usr/share/jetbrains/idea-iu/bin/idea.sh"
+    tagline="The Most Intelligent Java IDE"
     ;;
   idea-ic)
-    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.2+EAP"
+    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
+    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
     bin_name=idea
     path_expr=ideaIC
+    real_bin="/usr/share/jetbrains/idea-ic/bin/idea.sh"
+    tagline="The Most Intelligent Java IDE"
     ;;
   clion)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/clion/"
     path_expr=CLion
+    tagline="A cross-platform IDE for C and C++"
+    ;;
+  webstorm)
+    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm/"
+    path_expr=WebStorm-EAP
+    tagline="The Smartest JavaScript IDE"
     ;;
 esac
 
@@ -279,8 +298,8 @@ then
     find_latest
     echo "The latest version is $version"
   else
-    url=http://download.jetbrains.com/idea/idea$flavor-$version.tar.gz
-    filename=idea$flavor-$version.tar.gz
+    url="$DEFAULT_DOWNLOAD_URL/$path_expr-$version.tar.gz"
+    filename="$product-$version.tar.gz"
   fi
 else
   if [ -z "$version" ]
