@@ -1,0 +1,26 @@
+#!/bin/bash
+
+p=$1; shift
+v=$1; shift
+
+echo "Package: $p
+Section: devel
+Version: $v
+Maintainer: Trygve Laugstøl <trygvis@inamo.no>
+Architecture: all
+Depends: openjdk-7-jdk | sun-java6-jdk
+Suggests: openjdk-6-source, openjdk-7-source, openjdk-8-source"
+
+case "$p" in
+  idea-ic)
+    echo "Description: The Most Intelligent Java IDE"
+    echo "Conflicts: idea-iu"
+    ;;
+  idea-iu)
+    echo "Description: The Most Intelligent Java IDE"
+    echo "Conflicts: idea-ic"
+    ;;
+  clion)
+    echo "Description: A cross-platform IDE for C and C++"
+    ;;
+esac

@@ -9,6 +9,10 @@ umask=022
 uname_s=$(uname -s)
 
 usage() {
+  if [[ $1 != "" ]]
+  then
+    echo "error: $1" >&2
+  fi
   echo "usage: $0 OPTIONS" >&2
   echo "Use $0 -? for usage help" >&2
   exit 1
@@ -21,158 +25,133 @@ detect_platform() {
     return
   fi
 
-  if [[ $uname_s == "SunOS" ]]
-  then
-    echo "solaris"
-    return
-  fi
-
   echo "Could not detect platform, use -p to specify." >&2
 }
 
 find_latest() {
-  if [ "$IDEA_URL" = "" ]
+  if [[ $PRODUCT_URL = "" ]]
   then
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+X+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+10.5+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+11.1+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+12+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+12.1+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+13+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+13.1+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+14+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+14.1+EAP"
-#    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+15+EAP"
-    IDEA_URL="http://confluence.jetbrains.net/display/IDEADEV/IDEA+16+EAP"
+    PRODUCT_URL="$DEFAULT_PRODUCT_URL"
   fi
 
   export LC_ALL=C
 
-  echo "Finding latest version from $IDEA_URL ..."
-  read url filename version skip_the_rest < <(wget --max-redirect 5 -O - -q $IDEA_URL | \
+  set -x
+  echo "Finding latest version from $PRODUCT_URL ..."
+  read url version skip_the_rest < <(wget --max-redirect 5 -O - -q $PRODUCT_URL | \
       sed -n -e 's,\(href=.[^ "]\),\n\1,gp' | \
-      sed -n -e 's,^href.*\(http[^ "]*\).*,\1,p' | sed -n "/tar.gz$/ {
-    s,\(http.*:\/\/.*\/idea$flavor-.*tar.gz\),\1,p
-    s,.*\(ideaI.-[.0-9].*.tar.gz\).*,\1,p
-    s,.*-\([.0-9].*\).tar.gz,\1,p
-  }" | xargs)
+      sed -n -e 's,^href.*\(http[^ "]*\).*>ideaIU-\([^<]*\)\.tar\.gz.*,\1 \2,p' | \
+      sed -e '/sha256/d' | \
+      xargs)
 
-  if [ -z "$url" -o -z "$filename" -o -z "$version" ]
+  echo "url        = $url"
+  echo "version    = $version"
+  filename="$product-$version.tar.gz"
+  echo "filename   = $filename"
+  if [[ $url == "" || $filename == "" || $version == "" ]]
   then
     echo "Unable to find the latest version." >&2
     exit 1
   fi
 }
 
-build_common() {
-  rm -rf root
-  if [ ! -z "$src_dir" ]
-  then
-    echo "Copying IDEA from $src_dir"
-    mkdir -p root/usr/share/jetbrains
-    cp -r "$src_dir" root/usr/share/jetbrains/intellij-idea
-  else
-    echo "Unpacking tarball"
-    mkdir -p root/usr/share/jetbrains/intellij-idea
-    $tar --strip-components 1 -C root/usr/share/jetbrains/intellij-idea -zxf download/$filename
-  fi
-  mkdir -p root/usr/bin
-
-  cp idea.in root/usr/bin/idea
-  chmod +rx root/usr/bin/idea
-
-  mkdir -p root/usr/share/applications
-  if [ "$FLAVOR_LOWER" == "ic" ]
-  then
-    # IC version has different icon name
-    sed 's|/idea128\.png$|/idea_CE128.png|' intellij-idea.desktop > root/usr/share/applications/intellij-idea.desktop
-  else
-    cp intellij-idea.desktop root/usr/share/applications/intellij-idea.desktop
-  fi
-
-  mkdir -p root/etc/intellij-idea
-  cp idea.vmoptions.README root/etc/intellij-idea/
+# copied from intellij-idea-dpkg but not used for now
+install_vmoptions() {
+  cp jetbrains.vmoptions.README root/etc/jetbrains/$product/
   echo "
 Original idea.vmoptions:
-" >> root/etc/intellij-idea/idea.vmoptions.README
-  cat root/usr/share/jetbrains/intellij-idea/bin/idea.vmoptions >> root/etc/intellij-idea/idea.vmoptions.README
+" >> root/etc/intellij-idea/jetbrains.vmoptions.README
+  cat root/usr/share/jetbrains/intellij-idea/bin/jetbrains.vmoptions >> root/etc/intellij-idea/jetbrains.vmoptions.README
 
   fn=/tmp/idea.vmoptions.$$
   cp root/usr/share/jetbrains/intellij-idea/bin/idea.vmoptions $fn
   cat $fn | grep -v yjpagent > root/usr/share/jetbrains/intellij-idea/bin/idea.vmoptions
   rm $fn
+}
+
+build_common() {
+  rm -rf root
+  if [ ! -z "$src_dir" ]
+  then
+    echo "Copying from $src_dir"
+    mkdir -p root/usr/share/jetbrains
+    cp -r "$src_dir" root/usr/share/jetbrains/$product
+  else
+    echo "Unpacking tarball"
+    mkdir -p root/usr/share/jetbrains/$product
+    $tar --strip-components 1 -C root/usr/share/jetbrains/$product -zxf download/$filename
+  fi
+  mkdir -p root/usr/bin
+
+  cat jetbrains.in | sed "s,\$product,$product," > root/usr/bin/$bin_name
+  chmod +rx root/usr/bin/$bin_name
+
+  desktop=root/usr/share/applications/$product.desktop
+  mkdir -p ${desktop%/*}
+
+  echo "[Desktop Entry]
+Exec=/usr/bin/$bin_name
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=development;ide;debugger;profiling" > $desktop
+  case $product in
+    idea-iu)
+      echo "Name=IntelliJ IDEA - Ultimate Edition
+Comment=The Most Intelligent Java IDE
+Icon=/usr/share/jetbrains/$product/bin/idea.png" >> $desktop
+      ;;
+    idea-ic)
+      echo "Name=IntelliJ IDEA - Community Edition
+Comment=The Most Intelligent Java IDE
+Icon=/usr/share/jetbrains/$product/bin/idea_CE128.png" >> $desktop
+      ;;
+    clion)
+      echo "Name=CLion
+Comment=A cross-platform IDE for C and C++
+Icon=/usr/share/jetbrains/clion/bin/clion.svg" >> $desktop
+      ;;
+  esac
+
+#  install_vmoptions
 
   # If idea.license is provided in the bin directory of intellij-idea, this
   # license is applied to the genereated package. This allows to generate a
   # certified package for the Ultimate edition of the IDE.
-  if [ -f "idea.license" ]
+  if [ -f "$product.license" ]
   then
-    bin_dir="root/usr/share/jetbrains/intellij-idea/bin"
+    bin_dir="root/usr/share/jetbrains/$product/bin"
     echo "Copy licence file to $bin_dir"
-    cp idea.license $bin_dir
+    cp $product.license $bin_dir
   fi
 }
 
 calculate_package_filename() {
   case "$platform" in
-    solaris)
-      repo=`pwd`/repository/solaris/`uname -p`/`uname -r`
-      mkdir -p $repo
-      package_filename=$repo/intellij-idea-$version-`uname -s``uname -r`-`uname -p`.pkg
-      ;;
     debian)
-      # TODO: Add arch to the filename (i386, amd64)
       repo=repository/debian
       mkdir -p $repo
-      package_filename=$repo/intellij-idea-$FLAVOR_LOWER-$version.deb
+      package_filename=$repo/pool/$product-$version.deb
       ;;
   esac
 }
 
-build_solaris() {
-  build_common 
-
-  rm -rf solaris
-  mkdir -p solaris
-
-  sed -e "s,@VERSION@,$version," pkginfo.in > solaris/pkginfo
-  cp prototype.in solaris/prototype
-  pkgproto root=/ | awk '
-   {$5="root"}
-   $3 ~ /^\/$/ {getline} 
-   $3 ~ /^\/usr$/ {getline}
-   $3 ~ /^\/usr\/bin$/ {getline}
-   $3 ~ /^\/usr\/share$/ {getline}
-   $3 ~ /^\/usr\/share\/applications$/ {getline}
-   {printf $1 " " $2 " " $3 " " $4 " " $5 " " $6 " \n"}' >> solaris/prototype
-  pkgmk -o -d solaris -f solaris/prototype -r .
-
-  pkgtrans -s solaris $package_filename intellij-idea
-  echo "The package was successfully build in solaris/"
-  echo "To install run: pfexec pkgadd -d $package_filename"
-
-  if [ "$update_repository" = 1 ]
-  then
-    bldcat -b $repo
-  fi
+join() {
+  local IFS="$1"
+  shift
+  echo "$*"
 }
 
 build_debian() {
   build_common
 
   mkdir -p root/etc/sysctl.d
-  cp debian/sysctl-99-intellij.conf root/etc/sysctl.d/99-intellij.conf
-  chmod +rx root/usr/bin/idea
+  cp debian/sysctl-99-jetbrains.conf root/etc/sysctl.d/sysctl-99-$product.conf
+  chmod +rx root/usr/bin/$bin_name
 
   mkdir -p root/DEBIAN
 
-  sed \
-    -e "s,OTHER_FLAVOR_LOWER,$OTHER_FLAVOR_LOWER," \
-    -e "s,OTHER_FLAVOR,$OTHER_FLAVOR," \
-    -e "s,FLAVOR_LOWER,$FLAVOR_LOWER," \
-    -e "s,FLAVOR,$flavor," \
-    -e "s,VERSION,$version," \
-    debian/control.in > root/DEBIAN/control
+  debian/generate-control "$product" "$version" > root/DEBIAN/control
 
   cp debian/postinst root/DEBIAN/postinst
   chmod +rx root/DEBIAN/postinst
@@ -185,7 +164,31 @@ build_debian() {
 
   if [ "$update_repository" = 1 ]
   then
-    (cd $repo && dpkg-scanpackages -m . /dev/null | tee Packages | gzip > Packages.gz )
+    pushd .
+    cd $repo
+    archs="amd64 i386"
+    apt-ftparchive packages pool > Packages
+    for arch in $archs; do
+      Packages=dists/jetbrains/non-free/binary-$arch/Packages
+      mkdir -p `dirname $Packages`
+      cat Packages | tee $Packages | gzip > $Packages.gz
+    done
+    rm Packages
+
+    Release=dists/jetbrains/Release
+    InRelease=dists/jetbrains/InRelease
+    rm -f $Release
+    mkdir -p `dirname $Release`
+
+    echo "Architectures: i386 amd64
+Components: non-free
+Date: `date -R`
+Label: Jetbrains
+Origin: Jetbrains
+Suite: jetbrains" >> $Release
+    apt-ftparchive release dists/jetbrains >> $Release
+    gpg --clearsign -o $InRelease $Release
+    gpg -abs -o $Release.gpg $Release
   fi
 }
 
@@ -200,27 +203,30 @@ then
   fi
 fi
 
-while getopts "f:Fp:s:v:u?" flag
+# wget
+if [ -t 1 ]
+then
+  wget_opts="-q --progress=bar --show-progress"
+else
+  wget_opts="-q"
+fi
+
+while getopts "s:p:v:uF?" flag
 do
   case "$flag" in
     s)
       src_dir=$OPTARG
       ;;
-    f) 
-      flavor=$OPTARG
-
-      if [ "$flavor" != "IU" -a "$flavor" != "IC" ]
-      then
-        usage
-      fi
-      ;;
     p) 
-      platform=$OPTARG
+      product=$OPTARG
 
-      if [ "$platform" != "solaris" -a "$platform" != "debian" ]
-      then
-        usage
-      fi
+      case "$product" in
+        idea-ic|idea-iu|clion)
+          ;;
+        *)
+          usage "Unknown product"
+          ;;
+      esac
       ;;
     v)
       version=$OPTARG
@@ -243,35 +249,28 @@ then
   platform=$(detect_platform)
 fi
 
-if [ -z "$flavor" ]
+if [ -z "$product" ]
 then
-  if [[ -r $HOME/.intellij-idea-dpkg ]]
-  then
-    flavor=$(sed -n "s,^flavor=\(.*\),\1,p" "$HOME/.intellij-idea-dpkg")
-  else
-    echo "Defaulting to the 'IU' flavor, use -f to override."
-    flavor=IU
-  fi
-
-  if [ -z "$flavor" ]
-  then
-    usage
-  fi
-else
-  echo "Saving the flavor so you don't have to specify it again."
-  echo flavor=$flavor > "$HOME/.intellij-idea-dpkg"
+  usage "Missing -p [product] argument"
 fi
 
-if [ $flavor = "IC" ]
-then
-  OTHER_FLAVOR_LOWER=iu
-  OTHER_FLAVOR=IU
-  FLAVOR_LOWER=ic
-else
-  OTHER_FLAVOR_LOWER=ic
-  OTHER_FLAVOR=IC
-  FLAVOR_LOWER=iu
-fi
+bin_name=$product
+case $product in
+  idea-iu)
+    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.2+EAP"
+    bin_name=idea
+    path_expr=ideaIU
+    ;;
+  idea-ic)
+    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.2+EAP"
+    bin_name=idea
+    path_expr=ideaIC
+    ;;
+  clion)
+    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
+    path_expr=CLion
+    ;;
+esac
 
 if [ -z "$src_dir" ]
 then
@@ -309,6 +308,7 @@ then
     echo "WARNING: re-building package for version $version" >&2
   fi
 fi
+mkdir -p "`dirname $package_filename`"
 
 if [ -z "$src_dir" ]
 then
@@ -323,8 +323,12 @@ then
   #  wget -O "download/$filename" $url
   #fi
 
+  # Ideally this would have been using -P and -N to not download the
+  # same file every time, but Jetbrains sometimes uses the same filename
+  # for several downloads. An alternative is to download the checksum
+  # file and use that to check for existing downloads.
   echo "Downloading version $version..."
-  if [ `wget -q -P download -N $url; echo $?` != "0" ]
+  if [ `wget $wget_opts -O download/$filename $url; echo $?` != "0" ]
   then
     echo "Could not download $url" >&2
     exit 1
@@ -338,8 +342,6 @@ then
 fi
 
 case "$platform" in
-  solaris)
-    build_solaris;;
   debian)
     build_debian;;
 esac

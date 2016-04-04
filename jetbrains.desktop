@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=IntelliJ IDEA
 Comment=The Most Intelligent Java IDE
-Exec=/usr/bin/idea
+Exec=/usr/bin/BIN_NAME
 Terminal=false
 Type=Application
 StartupNotify=true

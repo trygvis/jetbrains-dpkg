@@ -1,7 +1,14 @@
 SYNOPSIS
 --------
 
-    ./build-package [-f <flavor>] [-p <platform>] [-v <version>] -u
+    ./build-package [-p <product>] [-v <version>] [-u]
+
+EXAMPLE
+-------
+
+Build the latest EAP of IntelliJ IDEA
+
+    ./build-package -p idea-iu
 
 DESCRIPTION
 --------
@@ -15,38 +22,14 @@ of IDEA, either by finding and downloading the latest version directly
 from Jetbrain's servers or by being pointed to a build output directory
 and use that.
 
-If you provide an *idea.license* file, this license is applied to the
-genereated package. This allows to generate a certified package for
-the Ultimate edition of the IDE.
-
 OPTIONS
 --------
 
-* `-f <flavor>`
+* `-p <product>`
 
-    The IDEA flavor to package. 'flavor' can be one of 'IU' and 'IC'
-    for IDEA Ultimate or IDEA Community Edition respectively.
+    The product to build.
 
-    This option will be stored in `$HOME/.intellij-idea-dpkg` so you
-    don't have to specifiy it in the next run.
-
-* `-F`
-
-    Force a build of a package, even if there is a package with the same
-    version in the repository.
-
-* `-p <platform>`
-
-    The operating system platform to build the package for. Can be one
-    of 'debian' and 'solaris'. The platform-specific tools has to be
-    available to do cross-build.
-    
-    'debian' will build a package for any of the Debian based Linux
-    distributions, including Debian and Ubuntu.
-
-    'solaris' will build a package for Solaris 8 to 10. The package itself
-    will work on later versions of Solaris and OpenSolaris but uses the
-    'old style' packaging tools (pkgadd, pkgmk, etc)
+    Accepts `idea-iu`, `idea-ic` and `clion`.
 
 * `-s <directory>`
 
@@ -67,6 +50,11 @@ OPTIONS
     The version of the build to use. If not specified the script will
     automatically find and download the latest EAP build of IDEA 14 from
     http://confluence.jetbrains.net/display/IDEADEV/IDEA+14+EAP
+
+* `-F`
+
+    Force a build of a package, even if there is a package with the same
+    version in the repository.
 
 SOLARIS
 -------

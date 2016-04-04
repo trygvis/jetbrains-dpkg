@@ -61,5 +61,11 @@ then
   fi
 fi
 
-exec /usr/share/jetbrains/intellij-idea/bin/idea.sh "$@"
-
+case `basename $0` in
+  idea)
+    exec /usr/share/jetbrains/$product/bin/idea.sh "$@"
+    ;;
+  clion)
+    exec /usr/share/jetbrains/clion/bin/clion.sh "$@"
+    ;;
+esac
