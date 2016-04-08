@@ -263,7 +263,7 @@ real_bin="/usr/share/jetbrains/$product/bin/$product.sh"
 case $product in
   idea-iu)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
-    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea"
     bin_name=idea
     path_expr=ideaIU
     real_bin="/usr/share/jetbrains/idea-iu/bin/idea.sh"
@@ -271,7 +271,7 @@ case $product in
     ;;
   idea-ic)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
-    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea"
     bin_name=idea
     path_expr=ideaIC
     real_bin="/usr/share/jetbrains/idea-ic/bin/idea.sh"
@@ -279,13 +279,13 @@ case $product in
     ;;
   clion)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/clion/"
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/clion"
     path_expr=CLion
     tagline="A cross-platform IDE for C and C++"
     ;;
   webstorm)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm/"
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm"
     path_expr=WebStorm-EAP
     tagline="The Smartest JavaScript IDE"
     ;;
