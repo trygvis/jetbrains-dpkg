@@ -285,14 +285,14 @@ case $product in
     ;;
   clion)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/clion"
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/cpp"
     path_expr=CLion
     tagline="A cross-platform IDE for C and C++"
     ;;
   webstorm)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
     DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm"
-    path_expr=WebStorm-EAP
+    path_expr=WebStorm
     tagline="The Smartest JavaScript IDE"
     ;;
 esac
