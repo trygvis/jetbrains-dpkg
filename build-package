@@ -98,18 +98,24 @@ Type=Application
 StartupNotify=true
 Comment=$tagline
 Categories=development;ide;debugger;profiling" > $desktop
+  plugin_path="root/usr/share/jetbrains/$product/plugins"
   case $product in
     idea-iu)
       echo "Name=IntelliJ IDEA - Ultimate Edition
 Icon=/usr/share/jetbrains/$product/bin/idea.png" >> $desktop
+      rm -r $plugin_path/tfsIntegration/lib/native/{aix,freebsd,hpux,macosx,win32,solaris}
+      rm -r $plugin_path/tfsIntegration/lib/native/linux/{arm,ppc}
+      rm -r $plugin_path/gradle/lib/native-platform-{freebsd,osx,windows}*
       ;;
     idea-ic)
       echo "Name=IntelliJ IDEA - Community Edition
 Icon=/usr/share/jetbrains/$product/bin/idea_CE128.png" >> $desktop
+      rm -r $plugin_path/gradle/lib/native-platform-{freebsd,osx,windows}*
       ;;
     clion)
       echo "Name=CLion
 Icon=/usr/share/jetbrains/clion/bin/clion.svg" >> $desktop
+      rm -r $plugin_path/tfsIntegration/lib/native/{aix,freebsd,hpux,macosx,win32,solaris}
       ;;
     webstorm)
       echo "Name=WebStorm
@@ -263,7 +269,7 @@ real_bin="/usr/share/jetbrains/$product/bin/$product.sh"
 case $product in
   idea-iu)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
-    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea"
     bin_name=idea
     path_expr=ideaIU
     real_bin="/usr/share/jetbrains/idea-iu/bin/idea.sh"
@@ -271,7 +277,7 @@ case $product in
     ;;
   idea-ic)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
-    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea"
     bin_name=idea
     path_expr=ideaIC
     real_bin="/usr/share/jetbrains/idea-ic/bin/idea.sh"
@@ -279,14 +285,14 @@ case $product in
     ;;
   clion)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/clion/"
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/cpp"
     path_expr=CLion
     tagline="A cross-platform IDE for C and C++"
     ;;
   webstorm)
     DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm/"
-    path_expr=WebStorm-EAP
+    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm"
+    path_expr=WebStorm
     tagline="The Smartest JavaScript IDE"
     ;;
 esac
