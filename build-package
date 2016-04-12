@@ -98,18 +98,24 @@ Type=Application
 StartupNotify=true
 Comment=$tagline
 Categories=development;ide;debugger;profiling" > $desktop
+  plugin_path="root/usr/share/jetbrains/$product/plugins"
   case $product in
     idea-iu)
       echo "Name=IntelliJ IDEA - Ultimate Edition
 Icon=/usr/share/jetbrains/$product/bin/idea.png" >> $desktop
+      rm -r $plugin_path/tfsIntegration/lib/native/{aix,freebsd,hpux,macosx,win32,solaris}
+      rm -r $plugin_path/tfsIntegration/lib/native/linux/{arm,ppc}
+      rm -r $plugin_path/gradle/lib/native-platform-{freebsd,osx,windows}*
       ;;
     idea-ic)
       echo "Name=IntelliJ IDEA - Community Edition
 Icon=/usr/share/jetbrains/$product/bin/idea_CE128.png" >> $desktop
+      rm -r $plugin_path/gradle/lib/native-platform-{freebsd,osx,windows}*
       ;;
     clion)
       echo "Name=CLion
 Icon=/usr/share/jetbrains/clion/bin/clion.svg" >> $desktop
+      rm -r $plugin_path/tfsIntegration/lib/native/{aix,freebsd,hpux,macosx,win32,solaris}
       ;;
     webstorm)
       echo "Name=WebStorm
