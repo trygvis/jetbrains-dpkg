@@ -1,5 +1,14 @@
 #!/bin/bash
 
+IDEA_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.3+EAP"
+IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+
+CLION_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
+CLION_DOWNLOAD_URL="https://download.jetbrains.com/clion/"
+
+WEBSTORM_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
+WEBSTORM_DOWNLOAD_URL="https://download.jetbrains.com/webstorm/"
+
 set -e
 #set -x
 
@@ -262,30 +271,30 @@ bin_name=$product
 real_bin="/usr/share/jetbrains/$product/bin/$product.sh"
 case $product in
   idea-iu)
-    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
-    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+    DEFAULT_PRODUCT_URL="$IDEA_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$IDEA_PRODUCT_URL"
     bin_name=idea
     path_expr=ideaIU
     real_bin="/usr/share/jetbrains/idea-iu/bin/idea.sh"
     tagline="The Most Intelligent Java IDE"
     ;;
   idea-ic)
-    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2016.1+EAP"
-    DEFAULT_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+    DEFAULT_PRODUCT_URL="$IDEA_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$IDEA_PRODUCT_URL"
     bin_name=idea
     path_expr=ideaIC
     real_bin="/usr/share/jetbrains/idea-ic/bin/idea.sh"
     tagline="The Most Intelligent Java IDE"
     ;;
   clion)
-    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/clion/"
+    DEFAULT_PRODUCT_URL="$CLION_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$CLION_PRODUCT_URL"
     path_expr=CLion
     tagline="A cross-platform IDE for C and C++"
     ;;
   webstorm)
-    DEFAULT_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
-    DEFAULT_DOWNLOAD_URL="https://download.jetbrains.com/webstorm/"
+    DEFAULT_PRODUCT_URL="$WEBSTORM_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$WEBSTORM_PRODUCT_URL"
     path_expr=WebStorm-EAP
     tagline="The Smartest JavaScript IDE"
     ;;
