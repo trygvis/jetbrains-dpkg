@@ -1,13 +1,16 @@
 #!/bin/bash
 
-IDEA_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2017.1+EAP"
-IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea/"
+IDEA_PRODUCT_URL="https://www.jetbrains.com/idea/nextversion/"
+IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea"
 
 CLION_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
-CLION_DOWNLOAD_URL="https://download.jetbrains.com/clion/"
+CLION_DOWNLOAD_URL="https://download.jetbrains.com/clion"
 
 WEBSTORM_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
-WEBSTORM_DOWNLOAD_URL="https://download.jetbrains.com/webstorm/"
+WEBSTORM_DOWNLOAD_URL="https://download.jetbrains.com/webstorm"
+
+PYCHARM_PRODUCT_URL="https://www.jetbrains.com/pycharm/nextversion/"
+PYCHARM_DOWNLOAD_URL="https://download.jetbrains.com/python"
 
 set -e
 #set -x
@@ -37,17 +40,40 @@ detect_platform() {
   echo "Could not detect platform, use -p to specify." >&2
 }
 
+find_latest2() {
+  export LC_ALL=C
+
+  set -x
+#  version=$(cat content | grep 'Build: '| sed -n -e 's,.*EAP \([0-9]*\.[0-9]*\.[0-9]*\).*,\1,p' | head -n 1)
+  version=$(cat content | perl -wlne '/>Build: / and print ($_ =~ /Build: .*([0-9]{3}\.[0-9]+\.[0-9]+)/);' | head -n 1)
+
+  if [[ $version == "" ]]
+  then
+    echo "Unable to find the latest version." >&2
+    exit 1
+  fi
+
+  url=$DOWNLOAD_URL/$path_expr-${version}.tar.gz
+  filename="$product-$version.tar.gz"
+}
+
 find_latest() {
   if [[ $PRODUCT_URL = "" ]]
   then
     PRODUCT_URL="$DEFAULT_PRODUCT_URL"
   fi
 
+  if [[ $DOWNLOAD_URL = "" ]]
+  then
+    DOWNLOAD_URL="$DEFAULT_DOWNLOAD_URL"
+  fi
+
   export LC_ALL=C
 
   set -x
   echo "Finding latest version from $PRODUCT_URL ..."
-  read url version skip_the_rest < <(wget --max-redirect 5 -O - -q $PRODUCT_URL | \
+  wget --max-redirect 5 -O content -q $PRODUCT_URL
+  read url version skip_the_rest < <(cat content | \
       sed -n -e 's,\(href=.[^ "]\),\n\1,gp' | \
       sed -n -e "s,^href.*\(http[^ \"]*\).*>$path_expr-\([^<]*\)\.tar\.gz.*,\1 \2,p" | \
       sed -e '/sha256/d' | \
@@ -59,9 +85,9 @@ find_latest() {
   echo "filename   = $filename"
   if [[ $url == "" || $filename == "" || $version == "" ]]
   then
-    echo "Unable to find the latest version." >&2
-    exit 1
+    find_latest2
   fi
+  rm -f content
 }
 
 # copied from intellij-idea-dpkg but not used for now
@@ -123,6 +149,10 @@ Icon=/usr/share/jetbrains/clion/bin/clion.svg" >> $desktop
     webstorm)
       echo "Name=WebStorm
 Icon=/usr/share/jetbrains/webstorm/bin/webstorm.svg" >> $desktop
+      ;;
+    pycharm)
+      echo "Name=PyCharm
+Icon=/usr/share/jetbrains/pycharm/bin/pycharm.png" >> $desktop
       ;;
   esac
 
@@ -234,7 +264,7 @@ do
       product=$OPTARG
 
       case "$product" in
-        idea-ic|idea-iu|clion|webstorm)
+        idea-ic|idea-iu|clion|webstorm|pycharm)
           ;;
         *)
           usage "Unknown product"
@@ -272,7 +302,7 @@ real_bin="/usr/share/jetbrains/$product/bin/$product.sh"
 case $product in
   idea-iu)
     DEFAULT_PRODUCT_URL="$IDEA_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$IDEA_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$IDEA_DOWNLOAD_URL"
     bin_name=idea
     path_expr=ideaIU
     real_bin="/usr/share/jetbrains/idea-iu/bin/idea.sh"
@@ -280,7 +310,7 @@ case $product in
     ;;
   idea-ic)
     DEFAULT_PRODUCT_URL="$IDEA_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$IDEA_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$IDEA_DOWNLOAD_URL"
     bin_name=idea
     path_expr=ideaIC
     real_bin="/usr/share/jetbrains/idea-ic/bin/idea.sh"
@@ -288,14 +318,20 @@ case $product in
     ;;
   clion)
     DEFAULT_PRODUCT_URL="$CLION_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$CLION_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$CLION_DOWNLOAD_URL"
     path_expr=CLion
     tagline="A cross-platform IDE for C and C++"
     ;;
   webstorm)
     DEFAULT_PRODUCT_URL="$WEBSTORM_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$WEBSTORM_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$WEBSTORM_DOWNLOAD_URL"
     path_expr=WebStorm-EAP
+    tagline="The Smartest JavaScript IDE"
+    ;;
+  pycharm)
+    DEFAULT_PRODUCT_URL="$PYCHARM_PRODUCT_URL"
+    DEFAULT_DOWNLOAD_URL="$PYCHARM_DOWNLOAD_URL"
+    path_expr=pycharm-professional
     tagline="The Smartest JavaScript IDE"
     ;;
 esac
