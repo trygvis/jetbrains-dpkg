@@ -30,16 +30,6 @@ usage() {
   exit 1
 }
 
-detect_platform() {
-  if [[ -r /etc/debian_version ]]
-  then
-    echo "debian"
-    return
-  fi
-
-  echo "Could not detect platform, use -p to specify." >&2
-}
-
 find_latest2() {
   export LC_ALL=C
 
@@ -169,16 +159,6 @@ Icon=/usr/share/jetbrains/pycharm/bin/pycharm.png" >> $desktop
   fi
 }
 
-calculate_package_filename() {
-  case "$platform" in
-    debian)
-      repo=repository/debian
-      mkdir -p $repo
-      package_filename=$repo/pool/$product-$version.deb
-      ;;
-  esac
-}
-
 join() {
   local IFS="$1"
   shift
@@ -287,11 +267,6 @@ do
   esac
 done
 
-if [ -z "$platform" ]
-then
-  platform=$(detect_platform)
-fi
-
 if [ -z "$product" ]
 then
   usage "Missing -p [product] argument"
@@ -360,7 +335,8 @@ else
   fi
 fi
 
-calculate_package_filename
+package_filename=repository/debian/pool/$product-$version.deb
+mkdir -p $(dirname package_filename)
 
 if [ -r "$package_filename" ]
 then
@@ -405,7 +381,4 @@ then
   fi
 fi
 
-case "$platform" in
-  debian)
-    build_debian;;
-esac
+build_debian
