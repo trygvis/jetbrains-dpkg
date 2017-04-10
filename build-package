@@ -9,7 +9,7 @@ CLION_DOWNLOAD_URL="https://download.jetbrains.com/clion"
 WEBSTORM_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
 WEBSTORM_DOWNLOAD_URL="https://download.jetbrains.com/webstorm"
 
-PYCHARM_PRODUCT_URL="https://www.jetbrains.com/pycharm/nextversion/"
+PYCHARM_PRODUCT_URL="https://confluence.jetbrains.com/pages/viewpage.action?pageId=23004355 https://www.jetbrains.com/pycharm/nextversion/"
 PYCHARM_DOWNLOAD_URL="https://download.jetbrains.com/python"
 
 set -e
@@ -30,21 +30,43 @@ usage() {
   exit 1
 }
 
-find_latest2() {
+grep_1() {
+  set -x
+  read url version skip_the_rest < <(cat content | \
+      sed -n -e 's,\(href=.[^ "]\),\n\1,gp' | \
+      sed -n -e "s,^href.*\(http[^ \"]*\).*>.*$path_expr-\([^<]*\)\.tar\.gz.*,\1 \2,p" | \
+      sed -e '/sha256/d' | \
+      xargs)
+  filename="$product-$version.tar.gz"
+}
+
+grep_2() {
   export LC_ALL=C
 
-  set -x
 #  version=$(cat content | grep 'Build: '| sed -n -e 's,.*EAP \([0-9]*\.[0-9]*\.[0-9]*\).*,\1,p' | head -n 1)
   version=$(cat content | perl -wlne '/>Build: / and print ($_ =~ /Build: .*([0-9]{3}\.[0-9]+\.[0-9]+)/);' | head -n 1)
 
-  if [[ $version == "" ]]
+  if [[ $version != "" ]]
   then
-    echo "Unable to find the latest version." >&2
-    exit 1
+    url=$DOWNLOAD_URL/$path_expr-${version}.tar.gz
+    filename="$product-$version.tar.gz"
   fi
+}
 
-  url=$DOWNLOAD_URL/$path_expr-${version}.tar.gz
-  filename="$product-$version.tar.gz"
+find_latest_from_url() {
+  local check_url=$1; shift
+
+  export LC_ALL=C
+
+  echo "Finding latest version from $check_url ..."
+  wget --max-redirect 5 -O content -q $check_url
+
+  grep_1
+  if [[ $url == "" ]]
+  then
+    grep_2
+  fi
+  rm -f content
 }
 
 find_latest() {
@@ -58,26 +80,20 @@ find_latest() {
     DOWNLOAD_URL="$DEFAULT_DOWNLOAD_URL"
   fi
 
-  export LC_ALL=C
+  for url in $PRODUCT_URL
+  do
+    find_latest_from_url "$url"
+    if [[ $url != "" ]]
+    then
+      echo "url        = $url"
+      echo "version    = $version"
+      echo "filename   = $filename"
+      return
+    fi
+  done
 
-  set -x
-  echo "Finding latest version from $PRODUCT_URL ..."
-  wget --max-redirect 5 -O content -q $PRODUCT_URL
-  read url version skip_the_rest < <(cat content | \
-      sed -n -e 's,\(href=.[^ "]\),\n\1,gp' | \
-      sed -n -e "s,^href.*\(http[^ \"]*\).*>$path_expr-\([^<]*\)\.tar\.gz.*,\1 \2,p" | \
-      sed -e '/sha256/d' | \
-      xargs)
-
-  echo "url        = $url"
-  echo "version    = $version"
-  filename="$product-$version.tar.gz"
-  echo "filename   = $filename"
-  if [[ $url == "" || $filename == "" || $version == "" ]]
-  then
-    find_latest2
-  fi
-  rm -f content
+  echo "Unable to find the latest version." >&2
+  exit 1
 }
 
 # copied from intellij-idea-dpkg but not used for now
