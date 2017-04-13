@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IDEA_PRODUCT_URL="https://www.jetbrains.com/idea/nextversion/"
+IDEA_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2017.1+EAP https://www.jetbrains.com/idea/nextversion/"
 IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea"
 
 CLION_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
