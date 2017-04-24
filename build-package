@@ -3,7 +3,7 @@
 IDEA_PRODUCT_URL="https://confluence.jetbrains.com/display/IDEADEV/IDEA+2017.1+EAP https://www.jetbrains.com/idea/nextversion/"
 IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea"
 
-CLION_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
+CLION_PRODUCT_URL="https://confluence.jetbrains.com/display/CLION/Early+Access+Program https://www.jetbrains.com/clion/nextversion/"
 CLION_DOWNLOAD_URL="https://download.jetbrains.com/cpp"
 
 WEBSTORM_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
@@ -43,8 +43,19 @@ grep_1() {
 grep_2() {
   export LC_ALL=C
 
-#  version=$(cat content | grep 'Build: '| sed -n -e 's,.*EAP \([0-9]*\.[0-9]*\.[0-9]*\).*,\1,p' | head -n 1)
   version=$(cat content | perl -wlne '/>Build: / and print ($_ =~ /Build: .*([0-9]{3}\.[0-9]+\.[0-9]+)/);' | head -n 1)
+
+  if [[ $version != "" ]]
+  then
+    url=$DOWNLOAD_URL/$path_expr-${version}.tar.gz
+    filename="$product-$version.tar.gz"
+  fi
+}
+
+grep_3() {
+  export LC_ALL=C
+
+  version=$(cat content | perl -wlne '/strong\>/ and print ($_ =~ /strong\>([0-9]{3}\.[0-9]+\.[0-9]+)/);' | head -n 1)
 
   if [[ $version != "" ]]
   then
@@ -65,6 +76,10 @@ find_latest_from_url() {
   if [[ $url == "" ]]
   then
     grep_2
+  fi
+  if [[ $url == "" ]]
+  then
+    grep_3
   fi
   rm -f content
 }
