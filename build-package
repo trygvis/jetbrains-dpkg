@@ -3,7 +3,7 @@
 IDEA_PRODUCT_URL="https://www.jetbrains.com/idea/nextversion/ https://confluence.jetbrains.com/display/IDEADEV/IDEA+2017.2+EAP"
 IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea"
 
-CLION_PRODUCT_URL="https://www.jetbrains.com/clion/nextversion/ https://confluence.jetbrains.com/display/CLION/Early+Access+Program"
+CLION_PRODUCT_URL="https://www.jetbrains.com/clion/nextversion/"
 CLION_DOWNLOAD_URL="https://download.jetbrains.com/cpp"
 
 WEBSTORM_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
