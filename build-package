@@ -1,18 +1,6 @@
 #!/bin/bash
 
-IDEA_PRODUCT_URL="https://www.jetbrains.com/idea/nextversion/ https://confluence.jetbrains.com/display/IDEADEV/IDEA+2017.2+EAP"
-IDEA_DOWNLOAD_URL="http://download.jetbrains.com/idea"
-
-CLION_PRODUCT_URL="https://www.jetbrains.com/clion/nextversion/"
-CLION_DOWNLOAD_URL="https://download.jetbrains.com/cpp"
-
-WEBSTORM_PRODUCT_URL="https://confluence.jetbrains.com/display/WI/WebStorm+EAP"
-WEBSTORM_DOWNLOAD_URL="https://download.jetbrains.com/webstorm"
-
-PYCHARM_PRODUCT_URL="https://www.jetbrains.com/pycharm/nextversion/ https://confluence.jetbrains.com/pages/viewpage.action?pageId=23004355"
-PYCHARM_DOWNLOAD_URL="https://download.jetbrains.com/python"
-
-set -e
+set -eo pipefail
 #set -x
 
 force=false
@@ -27,87 +15,6 @@ usage() {
   fi
   echo "usage: $0 OPTIONS" >&2
   echo "Use $0 -? for usage help" >&2
-  exit 1
-}
-
-grep_1() {
-  set -x
-  read url version skip_the_rest < <(cat content | \
-      sed -n -e 's,\(href=.[^ "]\),\n\1,gp' | \
-      sed -n -e "s,^href.*\(http[^ \"]*\).*>.*$path_expr-\([^<]*\)\.tar\.gz.*,\1 \2,p" | \
-      sed -e '/sha256/d' | \
-      xargs)
-  filename="$product-$version.tar.gz"
-}
-
-grep_2() {
-  export LC_ALL=C
-
-  version=$(cat content | perl -wlne '/>Build: / and print ($_ =~ /Build: .*([0-9]{3}\.[0-9]+\.[0-9]+)/);' | head -n 1)
-
-  if [[ $version != "" ]]
-  then
-    url=$DOWNLOAD_URL/$path_expr-${version}.tar.gz
-    filename="$product-$version.tar.gz"
-  fi
-}
-
-grep_3() {
-  export LC_ALL=C
-
-  version=$(cat content | perl -wlne '/strong\>/ and print ($_ =~ /strong\>([0-9]{3}\.[0-9]+\.[0-9]+)/);' | head -n 1)
-
-  if [[ $version != "" ]]
-  then
-    url=$DOWNLOAD_URL/$path_expr-${version}.tar.gz
-    filename="$product-$version.tar.gz"
-  fi
-}
-
-find_latest_from_url() {
-  local check_url=$1; shift
-
-  export LC_ALL=C
-
-  echo "Finding latest version from $check_url ..."
-  wget --max-redirect 5 -O content -q $check_url
-
-  grep_1
-  if [[ $url == "" ]]
-  then
-    grep_2
-  fi
-  if [[ $url == "" ]]
-  then
-    grep_3
-  fi
-  rm -f content
-}
-
-find_latest() {
-  if [[ $PRODUCT_URL = "" ]]
-  then
-    PRODUCT_URL="$DEFAULT_PRODUCT_URL"
-  fi
-
-  if [[ $DOWNLOAD_URL = "" ]]
-  then
-    DOWNLOAD_URL="$DEFAULT_DOWNLOAD_URL"
-  fi
-
-  for url in $PRODUCT_URL
-  do
-    find_latest_from_url "$url"
-    if [[ $url != "" ]]
-    then
-      echo "url        = $url"
-      echo "version    = $version"
-      echo "filename   = $filename"
-      return
-    fi
-  done
-
-  echo "Unable to find the latest version." >&2
   exit 1
 }
 
@@ -127,16 +34,9 @@ Original idea.vmoptions:
 
 build_common() {
   rm -rf root
-  if [ ! -z "$src_dir" ]
-  then
-    echo "Copying from $src_dir"
-    mkdir -p root/usr/share/jetbrains
-    cp -r "$src_dir" root/usr/share/jetbrains/$product
-  else
-    echo "Unpacking tarball"
-    mkdir -p root/usr/share/jetbrains/$product
-    $tar --strip-components 1 -C root/usr/share/jetbrains/$product -zxf download/$filename
-  fi
+  echo "Unpacking tarball"
+  mkdir -p root/usr/share/jetbrains/$product
+  $tar --strip-components 1 -C root/usr/share/jetbrains/$product -zxf download/$filename
   mkdir -p root/usr/bin
 
   cat jetbrains.in | \
@@ -153,41 +53,42 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Comment=$tagline
-Categories=development;ide;debugger;profiling" > $desktop
-  case $product in
-    idea-iu)
-      echo "Name=IntelliJ IDEA - Ultimate Edition
-Icon=/usr/share/jetbrains/$product/bin/idea.png" >> $desktop
-      ;;
-    idea-ic)
-      echo "Name=IntelliJ IDEA - Community Edition
-Icon=/usr/share/jetbrains/$product/bin/idea_CE128.png" >> $desktop
-      ;;
-    clion)
-      echo "Name=CLion
-Icon=/usr/share/jetbrains/clion/bin/clion.svg" >> $desktop
-      ;;
-    webstorm)
-      echo "Name=WebStorm
-Icon=/usr/share/jetbrains/webstorm/bin/webstorm.svg" >> $desktop
-      ;;
-    pycharm)
-      echo "Name=PyCharm
-Icon=/usr/share/jetbrains/pycharm/bin/pycharm.png" >> $desktop
-      ;;
-  esac
+Categories=Development
+Name=$name
+Keywords=$categories" > $desktop
 
-#  install_vmoptions
+case $product_u in
+  IIU)
+    icon="bin/idea.png"
+    ;;
+  IIC)
+    icon="bin/idea_CE128.png"
+    ;;
+  CL)
+    icon="bin/clion.svg"
+    ;;
+  WS)
+    icon="bin/webstorm.svg"
+    ;;
+  PC)
+    icon="bin/pycharm.png"
+    ;;
+esac
 
-  # If idea.license is provided in the bin directory of intellij-idea, this
-  # license is applied to the genereated package. This allows to generate a
-  # certified package for the Ultimate edition of the IDE.
-  if [ -f "$product.license" ]
-  then
-    bin_dir="root/usr/share/jetbrains/$product/bin"
-    echo "Copy licence file to $bin_dir"
-    cp $product.license $bin_dir
-  fi
+if [[ ! -z $icon ]]
+then
+  echo "Icon=/usr/share/jetbrains/$product/$icon" >> $desktop
+fi
+
+# If idea.license is provided in the bin directory of intellij-idea, this
+# license is applied to the genereated package. This allows to generate a
+# certified package for the Ultimate edition of the IDE.
+if [ -f "$product.license" ]
+then
+  bin_dir="root/usr/share/jetbrains/$product/bin"
+  echo "Copy licence file to $bin_dir"
+  cp $product.license $bin_dir
+fi
 }
 
 join() {
@@ -205,7 +106,7 @@ build_debian() {
 
   mkdir -p root/DEBIAN
 
-  debian/generate-control "$product" "$version" "$tagline" > root/DEBIAN/control
+  debian/generate-control "jetbrains-$product" "$version" "$tagline" "$replaces" > root/DEBIAN/control
 
   cp debian/postinst root/DEBIAN/postinst
   chmod +rx root/DEBIAN/postinst
@@ -268,19 +169,8 @@ fi
 while getopts "s:p:v:uF?" flag
 do
   case "$flag" in
-    s)
-      src_dir=$OPTARG
-      ;;
     p) 
       product=$OPTARG
-
-      case "$product" in
-        idea-ic|idea-iu|clion|webstorm|pycharm)
-          ;;
-        *)
-          usage "Unknown product"
-          ;;
-      esac
       ;;
     v)
       version=$OPTARG
@@ -303,70 +193,77 @@ then
   usage "Missing -p [product] argument"
 fi
 
-bin_name=$product
-real_bin="/usr/share/jetbrains/$product/bin/$product.sh"
-case $product in
-  idea-iu)
-    DEFAULT_PRODUCT_URL="$IDEA_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$IDEA_DOWNLOAD_URL"
-    bin_name=idea
-    path_expr=ideaIU
-    real_bin="/usr/share/jetbrains/idea-iu/bin/idea.sh"
-    tagline="The Most Intelligent Java IDE"
+product_u="$product"
+product=$(tr '[:upper:]' '[:lower:]' <<< $product)
+
+case $product_u in
+  IIU)
+    real_bin=idea.sh
+    replaces=idea-ic
     ;;
-  idea-ic)
-    DEFAULT_PRODUCT_URL="$IDEA_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$IDEA_DOWNLOAD_URL"
-    bin_name=idea
-    path_expr=ideaIC
-    real_bin="/usr/share/jetbrains/idea-ic/bin/idea.sh"
-    tagline="The Most Intelligent Java IDE"
+  IIC)
+    real_bin=idea.sh
+    replaces=idea-iu
     ;;
-  clion)
-    DEFAULT_PRODUCT_URL="$CLION_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$CLION_DOWNLOAD_URL"
-    path_expr=CLion
-    tagline="A cross-platform IDE for C and C++"
+  CL)
+    real_bin=clion.sh
+    replaces=clion
     ;;
-  webstorm)
-    DEFAULT_PRODUCT_URL="$WEBSTORM_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$WEBSTORM_DOWNLOAD_URL"
-    path_expr=WebStorm-EAP
-    tagline="The Smartest JavaScript IDE"
+  WS)
+    real_bin=webstorm.sh
+    replaces=webstorm
     ;;
-  pycharm)
-    DEFAULT_PRODUCT_URL="$PYCHARM_PRODUCT_URL"
-    DEFAULT_DOWNLOAD_URL="$PYCHARM_DOWNLOAD_URL"
-    path_expr=pycharm-professional
-    tagline="The Smartest JavaScript IDE"
+  PCP)
+    real_bin=pycharm.sh
+    replaces=pycharm
+    ;;
+  *)
+    usage "Unknown product, needs mapping"
     ;;
 esac
 
-if [ -z "$src_dir" ]
-then
-  if [ -z "$version" ]
-  then
-    find_latest
-    echo "The latest version is $version"
-  else
-    url="$DEFAULT_DOWNLOAD_URL/$path_expr-$version.tar.gz"
-    filename="$product-$version.tar.gz"
-  fi
-else
-  if [ -z "$version" ]
-  then
-    echo "When building from a directory, a version has to be specified with -v." >&2
-    exit 1
-  fi
 
-  if [ ! -d "$src_dir" ]
-  then
-    echo "Not a directory: $src_dir" >&2
-    exit 1
-  fi
+readarray -t vars <<< $(cat products.json | jq -r --arg product $product_u '.[] | select(.code==$product) | .cat=(.categories | join(";")) |.name, .description, .cat')
+name="${vars[0]}"
+tagline="${vars[1]}"
+categories="${vars[2]}"
+
+if [[ -z $name ]]
+then
+  echo "Could not find product in product list from Jetbrains. Available products:"
+  cat products.json | jq -r '.[] | "  \(.code)\t\t\(.name)"'
+  exit 1
 fi
 
-package_filename=repository/debian/pool/$product-$version.deb
+bin_name=jetbrains-$product
+real_bin="/usr/share/jetbrains/$product/bin/$real_bin"
+
+if [ -z "$version" ]
+then
+  set -x
+  readarray -t tmp <<< $(./find-latest -p "$product_u")
+  echo sz=${tmp[@]}
+  declare -A map
+  for i in ${!tmp[@]}
+  do
+    if [[ $(($i % 2)) == 0 ]]
+    then
+      key="${tmp[$i]}"
+      map[$key]="${tmp[$i + 1]}"
+    fi
+  done
+  version="${map[build]}"
+  url="${map[link]}"
+  size="${map[size]}"
+  filename=$(basename $url)
+  echo "The latest version is $version"
+else
+  usage "-v is required for now."
+  url="$DEFAULT_DOWNLOAD_URL/$path_expr-$version.tar.gz"
+  filename="$product-$version.tar.gz"
+fi
+
+package_filename=repository/debian/pool/jetbrains-$product-$version.deb
 mkdir -p $(dirname package_filename)
 
 if [ -r "$package_filename" ]
@@ -385,27 +282,29 @@ if [ -z "$src_dir" ]
 then
   mkdir -p download
 
-  # It would be possible to use the MD5 sum as a check here, then there would be no need to every force a download
-  #if [ -r "download/$filename" ]
-  #then
-  #  echo "$filename is already downloaded"
-  #else
-  #  echo "Downloading $url..."
-  #  wget -O "download/$filename" $url
-  #fi
-
-  # Ideally this would have been using -P and -N to not download the
-  # same file every time, but Jetbrains sometimes uses the same filename
-  # for several downloads. An alternative is to download the checksum
-  # file and use that to check for existing downloads.
-  echo "Downloading version $version..."
-  if [ `wget $wget_opts -O download/$filename $url; echo $?` != "0" ]
+  out="download/$filename"
+  if [[ ! -z $size && -s $out ]]
   then
-    echo "Could not download $url" >&2
-    exit 1
+    actual_size=$(stat -c '%s' "$out")
+    if [[ $size != $actual_size ]]
+    then
+      echo "Removing old download"
+    fi
   fi
 
-  if [ ! -r download/$filename ]
+  if [[ ! -s $out ]]
+  then
+    echo "Downloading version $version..."
+    if [ `wget $wget_opts -O "$out" $url; echo $?` != "0" ]
+    then
+      echo "Could not download $url" >&2
+      exit 1
+    fi
+  else
+    echo "Using old download"
+  fi
+
+  if [ ! -r $out ]
   then
     echo "wget didn't place the downloaded file where expected: download/$filename" >&2
     exit 1

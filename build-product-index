@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -euo pipefail
+
+curl "https://data.services.jetbrains.com/products?release.type=eap" | \
+  jq '[.[] | {code: .code, name: .name, description: .description, categories: .categories}]' > products.json

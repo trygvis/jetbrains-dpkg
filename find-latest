@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -euo pipefail
+
+url="https://data.services.jetbrains.com/products?release.type=eap"
+
+product=""
+while getopts "p:" flag
+do
+  case "$flag" in
+    p) 
+      product=$OPTARG
+      ;;
+  esac
+done
+
+function usage {
+  echo "$0 [-p product]"
+  exit 1
+}
+
+args+=(--arg product "$product")
+
+out=tmp
+
+if [[ ! -r $out.json ]]
+then
+  curl -s "$url" | jq . > $out.json
+fi
+
+cat "$out.json" | jq -r "${args[@]}" '.[] | select($product == "" or .code==$product) | "code",.code, "build", .releases[0].build, "link", .releases[0].downloads.linux.link, "size", .releases[0].downloads.linux.size'
+rm -f $out.json

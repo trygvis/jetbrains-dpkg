@@ -1,0 +1,284 @@
+[
+  {
+    "code": "AC",
+    "name": "AppCode",
+    "description": "Smart IDE for iOS/OS X development",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "CL",
+    "name": "CLion",
+    "description": "A smart cross-platform IDE for C and C++",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "DC",
+    "name": "dotCover",
+    "description": ".NET unit test runner and code coverage tool",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DCCLT",
+    "name": "dotCover Command Line Tools",
+    "description": ".NET unit test runner and code coverage tool",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DG",
+    "name": "DataGrip",
+    "description": "Many databases, one tool",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "DM",
+    "name": "dotMemory",
+    "description": ".NET memory profiler",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DMCLP",
+    "name": "dotMemory Command Line Profiler",
+    "description": "dotMemory Command Line Profiler",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DMU",
+    "name": "dotMemory Unit",
+    "description": "Unit testing framework for monitoring .NET memory usage",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DP",
+    "name": "dotTrace",
+    "description": ".NET performance profiler",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DPCLT",
+    "name": "dotTrace Command Line Tools",
+    "description": "dotTrace Command Line Tools",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DPK",
+    "name": "dotPeek",
+    "description": "Free .NET decompiler and assembly browser",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "DPPS",
+    "name": "dotTrace Profiling SDK",
+    "description": "dotTrace Profiling SDK",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "GO",
+    "name": "GoLand",
+    "description": "Capable and Ergonomic Go IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "HB",
+    "name": "Hub",
+    "description": "JetBrains team tools, integrated",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "IIC",
+    "name": "IntelliJ IDEA Community",
+    "description": "Capable and ergonomic Java IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "IIU",
+    "name": "IntelliJ IDEA Ultimate",
+    "description": "Capable and ergonomic Java IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "MPS",
+    "name": "MPS",
+    "description": "Create your own domain-specific language",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "MPSIIP",
+    "name": "MPS IntelliJ IDEA plugin",
+    "description": "MPS IntelliJ IDEA plugin",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "PCC",
+    "name": "PyCharm Community Edition",
+    "description": "Python IDE for professional developers",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "PCE",
+    "name": "PyCharm Edu",
+    "description": "Professional tool to learn programming with Python",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "PCP",
+    "name": "PyCharm Professional Edition",
+    "description": "Python IDE for professional developers",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "PS",
+    "name": "PhpStorm",
+    "description": "Lightning-smart PHP IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "RC",
+    "name": "ReSharper C++",
+    "description": "Visual Studio extension for C++ developers",
+    "categories": [
+      "Visual Studio"
+    ]
+  },
+  {
+    "code": "RD",
+    "name": "Rider",
+    "description": "A cross-platform .NET IDE based on the IntelliJ platform and ReSharper",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "RM",
+    "name": "RubyMine",
+    "description": "The most intelligent Ruby IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "RS",
+    "name": "ReSharper",
+    "description": "Visual Studio extension for .NET developers",
+    "categories": [
+      "Visual Studio",
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "RSCHB",
+    "name": "ReSharper Checked builds",
+    "description": "ReSharper Checked builds",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "RSCLT",
+    "name": "ReSharper Command Line Tools",
+    "description": "ReSharper Command Line Tools",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "RSU",
+    "name": "ReSharper Ultimate",
+    "description": "All individual .NET tools combined in one license",
+    "categories": [
+      "Visual Studio",
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "TBA",
+    "name": "Toolbox App",
+    "description": "A control panel for your tools and projects",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "TC",
+    "name": "TeamCity",
+    "description": "Powerful Continuous Integration out of the box",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "US",
+    "name": "Upsource",
+    "description": "Code review and repository browsing",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "WS",
+    "name": "WebStorm",
+    "description": "The smartest JavaScript IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "YTD",
+    "name": "YouTrack",
+    "description": "Issue tracker designed for development teams",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "YTWE",
+    "name": "Youtrack Workflow Editor",
+    "description": "Youtrack Workflow Editor",
+    "categories": [
+      "IDE"
+    ]
+  }
+]
