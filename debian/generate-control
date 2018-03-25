@@ -16,10 +16,10 @@ Description: $description
 Replaces: $replaces"
 
 case "$p" in
-  idea-ic)
-    echo "Conflicts: idea-iu"
+  jetbrains-iic)
+    echo "Conflicts: idea-iu, jetbrains-iiu"
     ;;
-  idea-iu)
-    echo "Conflicts: idea-ic"
+  jetbrains-iiu)
+    echo "Conflicts: idea-ic, jetbrains-iic"
     ;;
 esac

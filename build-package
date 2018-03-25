@@ -199,11 +199,11 @@ product=$(tr '[:upper:]' '[:lower:]' <<< $product)
 case $product_u in
   IIU)
     real_bin=idea.sh
-    replaces=idea-ic
+    replaces=idea-ic,jetbrains-iic,idea-iu
     ;;
   IIC)
     real_bin=idea.sh
-    replaces=idea-iu
+    replaces=idea-iu,jetbrains-iiu,idea-ic
     ;;
   CL)
     real_bin=clion.sh
