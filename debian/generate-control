@@ -10,7 +10,7 @@ Section: devel
 Version: $v
 Maintainer: Trygve Laugstøl <trygvis@inamo.no>
 Architecture: all
-Depends: openjdk-8-jdk | openjdk-7-jdk
+Depends: openjdk-8-jdk | openjdk-7-jdk | oracle-java8-jdk
 Suggests: openjdk-8-source, openjdk-7-source
 Description: $description
 Replaces: $replaces"
