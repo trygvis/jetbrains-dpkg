@@ -70,7 +70,7 @@ case $product_u in
   WS)
     icon="bin/webstorm.svg"
     ;;
-  PC)
+  PCP)
     icon="bin/pycharm.png"
     ;;
 esac
@@ -166,31 +166,43 @@ else
   wget_opts="-q"
 fi
 
-while getopts "s:p:v:uF?" flag
+while getopts "ls:p:v:t:F?" flag
 do
   case "$flag" in
-    p) 
+    l)
+      product=""
+      break
+      ;;
+    p)
       product=$OPTARG
       ;;
     v)
       version=$OPTARG
       ;;
-    u)
-      update_repository=1
+    t)
+      typ=$OPTARG
       ;;
     F)
       force="true"
       ;;
     ?)
       less README.md
-      exit 0
+      exit 1
       ;;
   esac
 done
 
 if [ -z "$product" ]
 then
-  usage "Missing -p [product] argument"
+  echo "Products list:"
+  echo ""
+  cat products.json |jq -r 'map(.code + " " + .name)|.[]' | while read c d
+  do
+#    echo $c
+#    echo -e $c\t$d
+    echo -e "$c\t$d"
+  done
+  exit 1
 fi
 
 product_u="$product"
@@ -240,17 +252,19 @@ real_bin="/usr/share/jetbrains/$product/bin/$real_bin"
 
 if [ -z "$version" ]
 then
-  set -x
-  readarray -t tmp <<< $(./find-latest -p "$product_u")
-  echo sz=${tmp[@]}
+  if [[ ! -z $typ ]]
+  then
+    t=(-t "$typ")
+  fi
+  readarray -t tmp <<< $(./find-latest -c "$product_u" "${t[@]}")
   declare -A map
   for i in ${!tmp[@]}
   do
-    if [[ $(($i % 2)) == 0 ]]
-    then
-      key="${tmp[$i]}"
-      map[$key]="${tmp[$i + 1]}"
-    fi
+    v="${tmp[$i]}"
+    case $(($i % 2)) in
+      0) key="$v" ;;
+      1) map[$key]="$v" ;;
+    esac
   done
   version="${map[build]}"
   url="${map[link]}"

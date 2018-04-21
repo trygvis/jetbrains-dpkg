@@ -2,24 +2,27 @@
 
 set -euo pipefail
 
-url="https://data.services.jetbrains.com/products?release.type=eap"
-
-product=""
-while getopts "p:" flag
-do
-  case "$flag" in
-    p) 
-      product=$OPTARG
-      ;;
-  esac
-done
-
-function usage {
-  echo "$0 [-p product]"
+function usage() {
+  echo "$0 [-c code] [-t type]"
   exit 1
 }
 
-args+=(--arg product "$product")
+url="https://data.services.jetbrains.com/products?"
+
+while getopts "h?c:t:" flag
+do
+  case "$flag" in
+    c)
+      url="$url&code=$OPTARG"
+      ;;
+    t)
+      url="$url&release.type=$OPTARG"
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
 
 out=tmp
 
@@ -28,5 +31,20 @@ then
   curl -s "$url" | jq . > $out.json
 fi
 
-cat "$out.json" | jq -r "${args[@]}" '.[] | select($product == "" or .code==$product) | "code",.code, "build", .releases[0].build, "link", .releases[0].downloads.linux.link, "size", .releases[0].downloads.linux.size'
+set +e
+read -d '' -r script <<'EOF'
+import "./semver" as semver;
+.[] |
+"code", .code, (.releases|map(select(.downloads) | .+{b:.build|semver::parse|flatten})|sort_by(.b))[-1] as $r |
+"type", $r.type,
+"build", $r.build,
+"link", $r.downloads.linux.link,
+"size", $r.downloads.linux.size
+EOF
+set -e
+
+#echo script:
+#echo $script
+
+cat "$out.json" | jq -r "${args[@]}" "$script"
 rm -f $out.json

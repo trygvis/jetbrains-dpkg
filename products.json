@@ -120,6 +120,14 @@
     ]
   },
   {
+    "code": "IICE",
+    "name": "IntelliJ IDEA Community Educational",
+    "description": "Capable and ergonomic Java IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
     "code": "IIU",
     "name": "IntelliJ IDEA Ultimate",
     "description": "Capable and ergonomic Java IDE",
