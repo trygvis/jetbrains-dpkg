@@ -24,11 +24,12 @@ do
   esac
 done
 
-out=tmp
+out=tmp.json
+rm -f "$out"
 
-if [[ ! -r $out.json ]]
+if [[ ! -r $out ]]
 then
-  curl -s "$url" | jq . > $out.json
+  curl -s "$url" | jq . > "$out"
 fi
 
 set +e
@@ -46,5 +47,4 @@ set -e
 #echo script:
 #echo $script
 
-cat "$out.json" | jq -r "${args[@]}" "$script"
-rm -f $out.json
+cat "$out" | jq -r "${args[@]}" "$script"
