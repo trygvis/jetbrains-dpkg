@@ -2,7 +2,7 @@
   {
     "code": "AC",
     "name": "AppCode",
-    "description": "Smart IDE for iOS/OS X development",
+    "description": "Smart IDE for iOS/macOS development",
     "categories": [
       "IDE"
     ]
@@ -96,9 +96,17 @@
     ]
   },
   {
+    "code": "FB",
+    "name": "Analytics",
+    "description": "JetBrains Analytics",
+    "categories": [
+      "Internal tools"
+    ]
+  },
+  {
     "code": "GO",
     "name": "GoLand",
-    "description": "Capable and Ergonomic Go IDE",
+    "description": "A Clever IDE to Go",
     "categories": [
       "IDE"
     ]

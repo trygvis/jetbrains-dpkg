@@ -73,6 +73,9 @@ case $product_u in
   PCP)
     icon="bin/pycharm.png"
     ;;
+  RD)
+    icon="bin/rider.png"
+    ;;
 esac
 
 if [[ ! -z $icon ]]
@@ -228,6 +231,9 @@ case $product_u in
   PCP)
     real_bin=pycharm.sh
     replaces=pycharm
+    ;;
+  RD)
+    real_bin=rider.sh
     ;;
   *)
     usage "Unknown product, needs mapping"
