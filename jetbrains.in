@@ -2,8 +2,16 @@
 
 paths="
 /usr/lib/jvm/default-java
+
+/usr/lib/jvm/java-11-oracle
+/usr/lib/jvm/java-8-oracle
+
+/usr/lib/jvm/java-12-openjdk
+/usr/lib/jvm/java-12-openjdk-amd64
 /usr/lib/jvm/java-11-openjdk
+/usr/lib/jvm/java-11-openjdk-amd64
 /usr/lib/jvm/java-10-openjdk
+/usr/lib/jvm/java-10-openjdk-amd64
 "
 
 if [ -r /etc/default/idea ]
