@@ -10,7 +10,7 @@ Section: devel
 Version: $v
 Maintainer: Trygve Laugstøl <trygvis@inamo.no>
 Architecture: all
-Depends: default-jdk
+Depends: java-sdk
 Description: $description"
 
 if [[ ! -z $replaces ]]
