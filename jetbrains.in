@@ -60,9 +60,4 @@ then
   fi
 fi
 
-# Work around the JDK's missing support for Wayland.
-export GDK_BACKEND=x11
-# I'll assume everybody has a hidpi display for now
-export GDK_SCALE=2
-
 exec REAL_BIN
