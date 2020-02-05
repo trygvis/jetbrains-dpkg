@@ -40,6 +40,14 @@
     ]
   },
   {
+    "code": "DL",
+    "name": "Datalore",
+    "description": "Intelligent web application for data analysis",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
     "code": "DM",
     "name": "dotMemory",
     "description": ".NET memory profiler",
@@ -106,7 +114,7 @@
   {
     "code": "GO",
     "name": "GoLand",
-    "description": "A Clever IDE to Go",
+    "description": "A clever IDE to Go",
     "categories": [
       "IDE"
     ]
@@ -128,9 +136,9 @@
     ]
   },
   {
-    "code": "IICE",
-    "name": "IntelliJ IDEA Community Educational",
-    "description": "Capable and ergonomic Java IDE",
+    "code": "IIE",
+    "name": "IntelliJ IDEA Edu",
+    "description": "Professional IDE made ready for learning",
     "categories": [
       "IDE"
     ]
@@ -141,6 +149,14 @@
     "description": "Capable and ergonomic Java IDE",
     "categories": [
       "IDE"
+    ]
+  },
+  {
+    "code": "KT",
+    "name": "Kotlin",
+    "description": "Statically typed programming language for the JVM, Android and the browser",
+    "categories": [
+      "Language"
     ]
   },
   {
