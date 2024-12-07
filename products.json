@@ -2,17 +2,49 @@
   {
     "code": "AC",
     "name": "AppCode",
-    "description": "Smart IDE for iOS/macOS development",
+    "description": "A smart IDE for iOS and macOS",
     "categories": [
       "IDE"
     ]
   },
   {
+    "code": "CC",
+    "name": "CodeCanvas",
+    "description": "The platform for remote development.",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
     "code": "CL",
     "name": "CLion",
-    "description": "A smart cross-platform IDE for C and C++",
+    "description": "A cross-platform C and C++ IDE",
     "categories": [
       "IDE"
+    ]
+  },
+  {
+    "code": "CLN",
+    "name": "CLion Nova",
+    "description": "CLion Nova preview, a faster IDE for C and C++",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "CWML",
+    "name": "Code With Me Lobby",
+    "description": "Lobby Server for Code With Me",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "CWMR",
+    "name": "Code With Me Relay",
+    "description": "Relay Server for Code With Me",
+    "categories": [
+      "Team tool"
     ]
   },
   {
@@ -34,7 +66,7 @@
   {
     "code": "DG",
     "name": "DataGrip",
-    "description": "Many databases, one tool",
+    "description": "The IDE for databases and SQL",
     "categories": [
       "IDE"
     ]
@@ -42,7 +74,15 @@
   {
     "code": "DL",
     "name": "Datalore",
-    "description": "Intelligent web application for data analysis",
+    "description": "A collaborative data science platform",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "DLE",
+    "name": "Datalore Enterprise",
+    "description": "Online Jupyter notebooks",
     "categories": [
       "IDE"
     ]
@@ -90,7 +130,7 @@
   {
     "code": "DPK",
     "name": "dotPeek",
-    "description": "Free .NET decompiler and assembly browser",
+    "description": ".NET decompiler",
     "categories": [
       ".NET tool"
     ]
@@ -104,19 +144,75 @@
     ]
   },
   {
-    "code": "FB",
-    "name": "Analytics",
-    "description": "JetBrains Analytics",
+    "code": "DS",
+    "name": "DataSpell",
+    "description": "The IDE for data analysis",
     "categories": [
-      "Internal tools"
+      "IDE"
+    ]
+  },
+  {
+    "code": "EHS",
+    "name": "ETW Host Service",
+    "description": "Event Tracing for Windows",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "FL",
+    "name": "Fleet",
+    "description": "More Than a Code Editor",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "FLIJ",
+    "name": "Fleet Backend",
+    "description": "Fleet Backend based on IntelliJ platform",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "FLL",
+    "name": "Fleet Launcher",
+    "description": "Launcher of Fleet workspace for remote use-cases",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "FLS",
+    "name": "Floating License Server",
+    "description": "Application to manage JetBrains product licenses within your company network",
+    "categories": [
+      "Utilities"
     ]
   },
   {
     "code": "GO",
     "name": "GoLand",
-    "description": "A clever IDE to Go",
+    "description": "An IDE for Go and Web",
     "categories": [
       "IDE"
+    ]
+  },
+  {
+    "code": "GRZ",
+    "name": "JetBrains Grazie: AI Writing Companion",
+    "description": "Improve your writing with proofreading, summarization, autocompletion, rephrasing, AI chat assistance, and more.",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "GW",
+    "name": "Gateway",
+    "description": "A remote development hub",
+    "categories": [
+      "Utilities"
     ]
   },
   {
@@ -128,9 +224,25 @@
     ]
   },
   {
+    "code": "HCC",
+    "name": "HTTP Client CLI",
+    "description": "Run Requests and Tests on CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "IDES",
+    "name": "IDE Services",
+    "description": "A centralized way to provision IntelliJ-based IDEs to your developers’ machines, securely and consistently, across your entire organization.",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
     "code": "IIC",
-    "name": "IntelliJ IDEA Community",
-    "description": "Capable and ergonomic Java IDE",
+    "name": "IntelliJ IDEA Community Edition",
+    "description": "The IDE for Java and Kotlin enthusiasts",
     "categories": [
       "IDE"
     ]
@@ -138,7 +250,7 @@
   {
     "code": "IIE",
     "name": "IntelliJ IDEA Edu",
-    "description": "Professional IDE made ready for learning",
+    "description": "An educational IDE for coding",
     "categories": [
       "IDE"
     ]
@@ -146,9 +258,17 @@
   {
     "code": "IIU",
     "name": "IntelliJ IDEA Ultimate",
-    "description": "Capable and ergonomic Java IDE",
+    "description": "The Leading Java and Kotlin IDE",
     "categories": [
       "IDE"
+    ]
+  },
+  {
+    "code": "JCD",
+    "name": "JetBrains Clients Downloader",
+    "description": "Download JetBrains Clients for Code With Me and Remote Development",
+    "categories": [
+      "Team tool"
     ]
   },
   {
@@ -160,9 +280,17 @@
     ]
   },
   {
+    "code": "MF",
+    "name": "Mono Font",
+    "description": "A free and open source typeface for developers",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
     "code": "MPS",
     "name": "MPS",
-    "description": "Create your own domain-specific language",
+    "description": "An IDE for DSL development",
     "categories": [
       "IDE"
     ]
@@ -178,7 +306,7 @@
   {
     "code": "PCC",
     "name": "PyCharm Community Edition",
-    "description": "Python IDE for professional developers",
+    "description": "The pure Python IDE",
     "categories": [
       "IDE"
     ]
@@ -186,7 +314,7 @@
   {
     "code": "PCE",
     "name": "PyCharm Edu",
-    "description": "Professional tool to learn programming with Python",
+    "description": "An educational IDE for Python",
     "categories": [
       "IDE"
     ]
@@ -194,7 +322,7 @@
   {
     "code": "PCP",
     "name": "PyCharm Professional Edition",
-    "description": "Python IDE for professional developers",
+    "description": "The full-stack Python IDE",
     "categories": [
       "IDE"
     ]
@@ -202,9 +330,97 @@
   {
     "code": "PS",
     "name": "PhpStorm",
-    "description": "Lightning-smart PHP IDE",
+    "description": "A smart IDE for PHP and Web",
     "categories": [
       "IDE"
+    ]
+  },
+  {
+    "code": "QA",
+    "name": "Aqua",
+    "description": "A powerful IDE for test automation",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "QDANDC",
+    "name": "Qodana Community for Android",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDCLD",
+    "name": "Qodana Cloud",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "QDGO",
+    "name": "Qodana for Go",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDJS",
+    "name": "Qodana for JS",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDJVM",
+    "name": "Qodana for JVM",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDJVMC",
+    "name": "Qodana Community for JVM",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDNET",
+    "name": "Qodana for .NET",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDPHP",
+    "name": "Qodana for PHP",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDPY",
+    "name": "Qodana for Python",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
+    ]
+  },
+  {
+    "code": "QDPYC",
+    "name": "Qodana Community for Python",
+    "description": "The code quality platform for your favorite CI",
+    "categories": [
+      "Utilities"
     ]
   },
   {
@@ -218,7 +434,23 @@
   {
     "code": "RD",
     "name": "Rider",
-    "description": "A cross-platform .NET IDE based on the IntelliJ platform and ReSharper",
+    "description": "A cross-platform .NET IDE",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
+    "code": "RDCPPP",
+    "name": "Rider for Unreal Engine",
+    "description": "Smart C++ and Blueprints support to craft the best games",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "RFU",
+    "name": "RiderFlow for Unity",
+    "description": "A plugin for Unity Editor from JetBrains",
     "categories": [
       ".NET tool"
     ]
@@ -226,15 +458,31 @@
   {
     "code": "RM",
     "name": "RubyMine",
-    "description": "The most intelligent Ruby IDE",
+    "description": "A Ruby and Rails IDE",
     "categories": [
       "IDE"
     ]
   },
   {
+    "code": "RR",
+    "name": "RustRover",
+    "description": "A powerful IDE for Rust",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
+    "code": "RRD",
+    "name": "Rider Remote Debugger",
+    "description": "Tools for Remote Debugging in Rider",
+    "categories": [
+      ".NET tool"
+    ]
+  },
+  {
     "code": "RS",
     "name": "ReSharper",
-    "description": "Visual Studio extension for .NET developers",
+    "description": "Visual Studio extensions",
     "categories": [
       "Visual Studio",
       ".NET tool"
@@ -258,11 +506,35 @@
   },
   {
     "code": "RSU",
-    "name": "ReSharper Ultimate",
+    "name": "ReSharper Tools",
     "description": "All individual .NET tools combined in one license",
     "categories": [
       "Visual Studio",
       ".NET tool"
+    ]
+  },
+  {
+    "code": "SP",
+    "name": "Space Cloud",
+    "description": "The integrated team environment",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "SPA",
+    "name": "Space Desktop",
+    "description": "A complete software development platform",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
+    "code": "SPP",
+    "name": "Space On-Premises",
+    "description": "The integrated team environment",
+    "categories": [
+      "Team tool"
     ]
   },
   {
@@ -282,6 +554,14 @@
     ]
   },
   {
+    "code": "TCC",
+    "name": "TeamCity Cloud",
+    "description": "Powerful Continuous Integration out of the box",
+    "categories": [
+      "Team tool"
+    ]
+  },
+  {
     "code": "US",
     "name": "Upsource",
     "description": "Code review and repository browsing",
@@ -290,9 +570,17 @@
     ]
   },
   {
+    "code": "WRS",
+    "name": "Writerside",
+    "description": "Documentation authoring IDE",
+    "categories": [
+      "IDE"
+    ]
+  },
+  {
     "code": "WS",
     "name": "WebStorm",
-    "description": "The smartest JavaScript IDE",
+    "description": "A JavaScript and TypeScript IDE",
     "categories": [
       "IDE"
     ]

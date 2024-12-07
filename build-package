@@ -79,6 +79,9 @@ case $product_u in
   GO)
     icon="bin/goland.png"
     ;;
+  RR)
+    icon="bin/rustrover.png"
+    ;;
 esac
 
 if [[ ! -z $icon ]]
@@ -240,6 +243,9 @@ case $product_u in
     ;;
   GO)
     real_bin=goland.sh
+    ;;
+  RR)
+    real_bin=rustrover.sh
     ;;
   *)
     usage "Unknown product, needs mapping"
